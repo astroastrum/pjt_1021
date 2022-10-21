@@ -1,5 +1,33 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% block body %}
 
-{% block body %}
-  <h1>{{ user.username }}의 프로필</h1>
+  <h1 class="m-3">{{ user.full_name }}의 프로필</h1>
+  <hr>
+  <div class="accordion" id="accordionExample">
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingOne">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          정보 상세보기
+        </button>
+      </h2>
+      <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+          <div class="m-3">
+            <p>회원번호 : {{ user.id }}</p>
+            <p>작성시간 : {{ user.date_joined }}</p>
+            <p>이름 : {{ user.full_name }}</p>
+            <p>이메일 : {{ user.email }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% if request.user.pk == user.pk %}
+  <div class="my-3">
+    <a href="{% url 'accounts:update' %}"><button type="button" class="btn btn-outline-primary">정보수정</button></a>
+    <a href="{% url 'accounts:delete' %}"><button type="button" class="btn btn-outline-danger">회원탈퇴</button></a>
+    <a href="{% url 'accounts:update_password' %}"><button type="button" class="btn btn-outline-success">비밀번호변경</button></a>
+  </div>
+  {% endif %}
+
 {% endblock body %}

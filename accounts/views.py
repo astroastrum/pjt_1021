@@ -8,6 +8,8 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
 
 
 # Create your views here.
@@ -51,17 +53,32 @@ def logout(request):
 
 @login_required
 def update(request):
+    form = CustomUserChangeForm(instance=request.user)
     if request.method == "POST":
         form = CustomUserChangeForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
             return redirect("accounts:detail", request.user.pk)
-    else:
-        form = CustomUserChangeForm(instance=request.user)
     context = {"form": form}
     return render(request, "accounts/update.html", context)
 
 
 def delete(request):
-    request.user.delete()
-    auth_logout(request)
+    if request.user.is_authenticated:
+        request.user.delete()
+        auth_logout(request)
+        return redirect("accounts:login")
+
+def update_password(request):
+    form = PasswordChangeForm(request.user)
+    if request.method == "POST":
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            ## 비밀번호 변경 시, 로그인 정보가 사라짐 그래서 비밀번호 변경 하고도 로그인 유지를 위해서
+            update_session_auth_hash(request, user)
+            return redirect('accounts:detail', request.user.id)
+    context = {
+        "form" : form
+    }
+    return render(request, 'accounts/update_password.html', context)
