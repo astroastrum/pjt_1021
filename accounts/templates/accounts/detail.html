@@ -21,12 +21,25 @@
       </div>
     </div>
   </div>
-
+  <div class="text-center">
+    팔로잉 : {{user.followings.all.|length}} / 팔로워 : {{user.followers.all|length}}
+  </div>
   {% if request.user.pk == user.pk %}
-  <div class="my-3">
+  <div class="text-center my-3">
     <a href="{% url 'accounts:update' %}"><button type="button" class="btn btn-outline-primary">정보수정</button></a>
     <a href="{% url 'accounts:delete' %}"><button type="button" class="btn btn-outline-danger">회원탈퇴</button></a>
     <a href="{% url 'accounts:update_password' %}"><button type="button" class="btn btn-outline-success">비밀번호변경</button></a>
+  </div>
+  {% else %}
+  <div class="text-center mt-3">
+    <form action="{% url 'accounts:follow' user.pk %}" method="POST">
+      {% csrf_token %}
+      {% if request.user in user.followers.all %}
+      <input class='btn btn-outline-danger px-0' type="submit" value="UNFOLLOWER" style='width:120px'>
+      {% else %}
+      <input class='btn btn-outline-primary px-0' type="submit" value="FOLLOWER" style='width:120px'>
+      {% endif %}
+    </form>
   </div>
   {% endif %}
 
