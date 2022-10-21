@@ -1,9 +1,20 @@
 {% extends 'base.html' %}
 {% block body %}
 {% load django_bootstrap5 %}
-제목:{{info.title}}
+<div class="d-flex justify-content-between mt-5">
+  <div>
+    <h3>제목: {{info.title}}</h3>
+    <p>작성자: {{info.user.username}}</p>
+  </div>
+  <div>
+    <p>작성시간: {{info.created_at}}</p>
+    <p>마지막 업데이트 시간: {{info.updated_at}}</p>
+  </div>
+</div>
 <br>
-내용:{{info.content}}
+내용: {{info.content}}
+점수: {{info.grade}}
+<br>
 {% if info.image %}
 <img src="{{ info.image.url }}">
 {% endif %}
@@ -19,5 +30,7 @@
   <a class='btn btn-danger' href="{% url 'reviews:comment_delete' info.pk comment.pk %}">삭제</a>
 {% endif %}
 </p>
+{% empty %}
+  <p class="text-center">댓글이 없어요😂 첫 댓글을 남겨주세요.</p>
 {% endfor %}
 {% endblock %}
