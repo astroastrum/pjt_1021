@@ -27,8 +27,8 @@
     변경을 요청할땐 (파일이 현재 서버에 있고 and 사용자가 새로 파일을 넣으려고 하거나) or (사용자가 모든 이미지를 삭제 눌렀을 때) 서버에서 삭제 되도록 설계했음.
     ```pyhon
     if (temp.image and request.FILES.get("image")) or request.POST.get("image-clear"):
-                    os.remove(temp.image.path)
-                    ```
+        os.remove(temp.image.path)
+                    
 
 ## 프로젝트 역할
 
