@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block body %}
 
-  <h2 class="m-3">회원 목록</h2>
+  <h3 class="m-3 text-center">회원 목록</h3>
   <hr>
   <div class="container m-5">
     {% if request.user.is_authenticated %}
@@ -9,16 +9,29 @@
         <thead>
           <th>ID</th>
           <th>이름</th>
+          <th>follower</th>
+          <th>following</th>
           <th>email</th>
+
         </thead>
         <tbody>
-          {% for user in users %}
+          {% for user in members %}
             <tr>
               <td>{{ user.id }}</td>
               <td>
                 <a href="{% url 'accounts:detail' user.pk %}">{{user}}</a>
               </td>
-              <td>{{ user.email }}</td>
+              <td>following :
+                {{user.followings.all.|length}}
+
+              </td>
+              <td>
+                follower :
+                {{user.followers.all|length}}
+              </td>
+              <td>
+                {{ user.email }}
+              </td>
             </tr>
           {% endfor %}
         </tbody>
