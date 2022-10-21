@@ -69,6 +69,7 @@ def delete(request):
         auth_logout(request)
         return redirect("accounts:login")
 
+
 def update_password(request):
     form = PasswordChangeForm(request.user)
     if request.method == "POST":
@@ -77,8 +78,22 @@ def update_password(request):
             user = form.save()
             ## 비밀번호 변경 시, 로그인 정보가 사라짐 그래서 비밀번호 변경 하고도 로그인 유지를 위해서
             update_session_auth_hash(request, user)
-            return redirect('accounts:detail', request.user.id)
-    context = {
-        "form" : form
-    }
-    return render(request, 'accounts/update_password.html', context)
+            return redirect("accounts:detail", request.user.id)
+    context = {"form": form}
+    return render(request, "accounts/update_password.html", context)
+
+
+def index(request):
+    members = get_user_model().objects.all()
+    return render(request, "accounts/index.html", {"members": members})
+
+
+@login_required
+def follow(request, user_pk):
+    person = get_user_model().objects.get(pk=user_pk)
+    if person != request.user:
+        if person.followers.filter(pk=request.user.pk).exists():
+            person.followers.remove(request.user)
+        else:
+            person.followers.add(request.user)
+    return redirect("accounts:detail", user_pk)
