@@ -92,3 +92,8 @@ def comment_delete(request, review_pk, comment_pk):
         return redirect("reviews:detail", review_pk)
     else:
         return HttpResponseForbidden
+
+
+def search(request):
+    form = Review.objects.filter(title__contains=request.GET["title"])
+    return render(request, "reviews/search.html", {"form": form})
