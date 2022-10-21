@@ -46,7 +46,7 @@ def login(request):
 def logout(request):
     auth_logout(request)
     messages.warning(request, "로그아웃")
-    return redirect("articles:index")
+    return redirect("reviews:index")
 
 
 @login_required
