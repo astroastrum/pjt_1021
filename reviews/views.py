@@ -28,9 +28,11 @@ def create(request):
 def detail(request, pk):
     info = Review.objects.get(pk=pk)
     form = CommentForm()
+    temp = info.comment_set.all()
     context = {
         "info": info,
         "form": form,
+        "temp": temp,
     }
     return render(request, "reviews/detail.html", context)
 
@@ -67,5 +69,26 @@ def delete(request, pk):
             os.remove(temp.thumbnail.path)
         Review.objects.get(pk=pk).delete()
         return redirect("reviews:index")
+    else:
+        return HttpResponseForbidden
+
+
+@login_required
+def comment_create(request, review_pk):
+    form = CommentForm(request.POST)
+    if form.is_valid():
+        temp = form.save(commit=False)
+        temp.review_id = review_pk
+        temp.user_id = request.user.id
+        temp.save()
+        return redirect("reviews:detail", review_pk)
+
+
+@login_required
+def comment_delete(request, review_pk, comment_pk):
+    temp = Comment.objects.get(pk=comment_pk)
+    if request.user.id == temp.user_id:
+        temp.delete()
+        return redirect("reviews:detail", review_pk)
     else:
         return HttpResponseForbidden
