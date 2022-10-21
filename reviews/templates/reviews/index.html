@@ -1,6 +1,38 @@
-{% extends 'base.html' %}{% block body %}
+{% extends 'base.html' %}
+{% block body %}
 
-<h1>INDEX</h1>
-<hr>
+  <h2 class="m-3">게시글 목록</h2>
+  <hr>
+  {% if request.user.is_authenticated %}
+    <div class="d-flex justify-content-end mx-5 my-3">
+      <a href="{% url 'reviews:create' %}">
+        <button type="button" class="btn btn-outline-dark">게시글 작성하기</button>
+      </a>
+    </div>
+    <table class="table mx-5">
+      <thead>
+        <tr>
+          <th scope="col">번호</th>
+          <th scope="col">제목</th>
+          <th scope="col">내용</th>
+        </tr>
+      </thead>
 
-{% endblock %}
+      <tbody>
+        {% for r in form %}
+          <tr>
+            <th scope="row"><br>{{r.id}}</th>
+            <td><br>
+              <a class="text-decoration-none" href="{% url 'reviews:detail' r.pk %}">
+                {{r.title}}</a>
+            </td>
+            <td><br>{{ r.content }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <h3>로그인을 해주세요.</h3>
+  {% endif %}
+  <hr>
+{% endblock body %}

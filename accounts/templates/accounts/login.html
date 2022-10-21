@@ -7,6 +7,8 @@
     {% csrf_token %}
     {% bootstrap_form form %}
     <input type="submit" class="btn btn-outline-dark" value="로그인">
-    <a href="{% url 'accounts:delete' %}"><button type="button" class="btn btn-outline-dark">회원가입</button></a>
+    <a href="{% url 'accounts:signup' %}">
+      <button type="button" class="btn btn-outline-dark">회원가입</button>
+    </a>
   </form>
 {% endblock body %}
